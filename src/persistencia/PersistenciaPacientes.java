@@ -55,6 +55,11 @@ public class PersistenciaPacientes {
     private void validarNombre(String nombre) {
         if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        } 
+        if(nombre.matches("^[a-zA-Z]+$")){
+            System.out.println("Nombre válido");
+        }else{
+            throw new IllegalArgumentException("El nombre no es valido."); 
         }
     }
 
