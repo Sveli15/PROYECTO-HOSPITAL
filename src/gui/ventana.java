@@ -2,6 +2,7 @@ package gui;
 
 import fachada.PersistenciaFachada;
 import java.awt.HeadlessException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 //import java.util.Optional;
@@ -49,16 +50,32 @@ public class ventana extends javax.swing.JFrame {
     }
 
     private void agregarPacienteGUI() {
-        try {
-            int id = Integer.parseInt(txtIdPac.getText());
-            if (id <= 0) {
-                return;
-            }
-            String nombre = JOptionPane.showInputDialog(this, "Nombre:");
+        
+    int id = Integer.parseInt(txtIdPac.getText());
+    if (id <= 0) {
+        return;
+    }   
+        String nombre;
+        
+     while(true){
+
+           nombre = JOptionPane.showInputDialog(this, "Nombre:");
+           
             if (nombre == null || nombre.isBlank()) {
                 mostrarError(new IllegalArgumentException("El nombre no puede estar vacío."));
                 return;
             }
+            if(nombre.matches("^[a-zA-Z]+$")){
+              break;
+              
+            }else{
+                JOptionPane.showMessageDialog(null, "solo se permiten letras, intente nuevamente",
+                        "ERROR", JOptionPane.ERROR_MESSAGE);        
+            }
+         }
+     
+         try{
+ 
             String edadStr = JOptionPane.showInputDialog(this, "Edad:");
             int edad = Integer.parseInt(edadStr);
             String direccion = JOptionPane.showInputDialog(this, "Dirección:");
@@ -67,7 +84,11 @@ public class ventana extends javax.swing.JFrame {
         } catch (HeadlessException | NumberFormatException ex) {
             mostrarError(ex);
         }
-    }
+     }
+     
+    
+    
+    
 
     private void consultarPacienteGUI() {
         int id = Integer.parseInt(txtIdPac.getText());
