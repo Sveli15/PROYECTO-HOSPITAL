@@ -1,0 +1,3 @@
+1|yo|23|no se
+23|yo|45|dd
+3|Elisa|18|aa
