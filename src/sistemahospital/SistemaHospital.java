@@ -14,9 +14,6 @@ public class SistemaHospital {
         ven.setVisible(true);
         
         
-        
-        
-        
     }
 }
 
