@@ -2,7 +2,6 @@ package fachada;
 
 import modelo.*;
 import persistencia.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class PersistenciaFachada implements IPersistenciaFachada {
@@ -123,8 +122,8 @@ public class PersistenciaFachada implements IPersistenciaFachada {
     }
 
     @Override
-    public List<Consulta> consultasPorPeriodo(LocalDateTime inicio, LocalDateTime fin) {
-        return persistenciaConsultas.consultasPorPeriodo(inicio, fin);
+    public List<Consulta> buscarConsultasPorFecha(String patronFecha) {
+        return persistenciaConsultas.buscarConsultasPorFecha(patronFecha);
     }
 
     @Override
