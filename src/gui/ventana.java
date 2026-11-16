@@ -46,12 +46,11 @@ public class ventana extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 
-    private void agregarPacienteGUI() {
-        
-    int id = Integer.parseInt(txtIdPac.getText());
-    if (id <= 0) {
-        return;
-    }   
+    private void agregarPacienteGUI() {   
+        int id = Integer.parseInt(txtIdPac.getText());
+        if (id <= 0) {
+            return;
+        }   
 
          try{
             String nombre = JOptionPane.showInputDialog(this, "Nombre:"); 
@@ -63,7 +62,7 @@ public class ventana extends javax.swing.JFrame {
         } catch (HeadlessException | IllegalArgumentException ex) {
             mostrarError(ex);
         }
-     }
+    }
      
     
     
@@ -227,6 +226,24 @@ public class ventana extends javax.swing.JFrame {
             mostrarError(ex);
         }
     }
+    
+     private void agregarEspecialidadGUI(){
+        try {
+            int id = Integer.parseInt(txtEspID.getText());
+            if (id <= 0) {
+                return;
+            }
+            String nombre = JOptionPane.showInputDialog(this, "Nombre de la especialidad:");
+            if (nombre.isBlank()) {
+                JOptionPane.showConfirmDialog(this, "El nombre no puede estar vacío.");
+                return;
+            }
+            fachada.agregarEspecialidad(new Especialidad(id, nombre));
+            mostrarMensaje("Especialidad agregada correctamente.");
+        } catch (HeadlessException | IllegalArgumentException ex) {
+            mostrarError(ex);
+        }
+    }
 
     private void consultarMedicoGUI() {
         int id = Integer.parseInt(txtIdDoc.getText());
@@ -240,6 +257,8 @@ public class ventana extends javax.swing.JFrame {
             mostrarMensaje("No existe un médico con ID " + id + ".");
         }
     }
+    
+   
 
     private void consultarInventarioGUI() {
         try {
@@ -482,6 +501,9 @@ public class ventana extends javax.swing.JFrame {
         txtIdDoc = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         cmbMedicos = new javax.swing.JComboBox<>();
+        jLabel19 = new javax.swing.JLabel();
+        txtEspID = new javax.swing.JTextField();
+        btnAgregarEsp = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -640,6 +662,15 @@ public class ventana extends javax.swing.JFrame {
             }
         });
 
+        jLabel19.setText("Para añadir una especialidad ingrese su ID:");
+
+        btnAgregarEsp.setText("Aceptar");
+        btnAgregarEsp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarEspActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -647,10 +678,13 @@ public class ventana extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel19)
                     .addComponent(jLabel9)
                     .addComponent(jLabel8)
                     .addComponent(txtIdDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbMedicos, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbMedicos, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEspID, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAgregarEsp, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(193, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -664,7 +698,13 @@ public class ventana extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbMedicos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtEspID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAgregarEsp)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Médicos", jPanel2);
@@ -972,6 +1012,10 @@ public class ventana extends javax.swing.JFrame {
         agregarEquipoGUI();
     }//GEN-LAST:event_BtnAgregarEMActionPerformed
 
+    private void btnAgregarEspActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEspActionPerformed
+        agregarEspecialidadGUI();
+    }//GEN-LAST:event_btnAgregarEspActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1010,6 +1054,7 @@ public class ventana extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAgregarEM;
     private javax.swing.JButton btnAgendarConsulta;
+    private javax.swing.JButton btnAgregarEsp;
     private javax.swing.JButton btnConsultar;
     private javax.swing.JButton btnInventariar;
     private javax.swing.JButton btnInventario;
@@ -1031,6 +1076,7 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1050,6 +1096,7 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblImagenlol;
+    private javax.swing.JTextField txtEspID;
     private javax.swing.JTextField txtIdConsultar;
     private javax.swing.JTextField txtIdDoc;
     private javax.swing.JTextField txtIdEM;
