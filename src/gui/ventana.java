@@ -2,6 +2,10 @@ package gui;
 
 import fachada.PersistenciaFachada;
 import java.awt.HeadlessException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -93,32 +97,45 @@ public class ventana extends javax.swing.JFrame {
     }
     
      private void buscarConsultasPorFecha(){
-         
-         String patron = txtbusccon.getText().trim();
+     String patron = txtbusccon.getText().trim();
 
-         List<Consulta> consultas = fachada.listarConsultas();
+    List<Consulta> consultas = fachada.listarConsultas();
 
-         DefaultTableModel modelo = (DefaultTableModel) tblbusccon.getModel();
+    DefaultTableModel modelo = (DefaultTableModel) tblbusccon.getModel();
 
-         modelo.setRowCount(0);
+    modelo.setRowCount(0);
 
-         for (Consulta c : consultas) {
+    try {
 
-         if (c.getFecha().toString().contains(patron)) {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/uuuu");
 
-        modelo.addRow(new Object[]{
-            c.getId(),
-            c.getPaciente().getNombre(),
-            c.getMedico().getNombre(),    
-            c.getFecha(),
-            c.getEstado()
-        });
+        LocalDate fechaBuscada = LocalDate.parse(patron, formato);
+
+        String fechaConvertida = fechaBuscada.toString();
+
+        for (Consulta c : consultas) {
+
+            if (c.getFecha().startsWith(fechaConvertida)) {
+
+                modelo.addRow(new Object[]{
+                    c.getId(),
+                    c.getPaciente().getNombre(),
+                    c.getMedico().getNombre(),
+                    c.getFecha(),
+                    c.getEstado()
+                });
+
+            }
+        }
+
+    } catch (DateTimeParseException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Ingresa la fecha en formato dd/MM/yyyy");
 
     }
 }
-             
-    }
-    
+     
 
     private void consultarPacienteGUI() {
         int id = Integer.parseInt(txtIdPac.getText());
