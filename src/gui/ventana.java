@@ -2,10 +2,7 @@ package gui;
 
 import fachada.PersistenciaFachada;
 import java.awt.HeadlessException;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-//import java.util.Optional;
 import javax.swing.JOptionPane;
 import modelo.Consulta;
 import modelo.EquipoMedico;
@@ -363,20 +360,14 @@ public class ventana extends javax.swing.JFrame {
         mostrarConsultas(resultado, "No hay consultas para ese médico.");
     }
 
-    private void consultasPorPeriodoGUI() {
+    private void buscarConsultasPorFechaGUI() {
         try {
-            String inicioStr = JOptionPane.showInputDialog(this, "Fecha de inicio (AAAA-MM-DDTHH:MM):");
-            if (inicioStr == null) {
+            String fecha = JOptionPane.showInputDialog(this, "Fecha de consulta (dd/MM/yyyy):");
+            if (fecha == null) {
                 return;
             }
-            String finStr = JOptionPane.showInputDialog(this, "Fecha de fin (AAAA-MM-DDTHH:MM):");
-            if (finStr == null) {
-                return;
-            }
-            LocalDateTime inicio = LocalDateTime.parse(inicioStr);
-            LocalDateTime fin = LocalDateTime.parse(finStr);
-            List<Consulta> resultado = fachada.consultasPorPeriodo(inicio, fin);
-            mostrarConsultas(resultado, "No hay consultas en ese periodo.");
+            List<Consulta> resultado = fachada.buscarConsultasPorFecha(fecha);
+            mostrarConsultas(resultado, "No hay consultas en esa fecha.");
         } catch (HeadlessException ex) {
             mostrarError(ex);
         }
@@ -392,7 +383,7 @@ public class ventana extends javax.swing.JFrame {
             sb.append("ID ").append(c.getId())
                     .append(" | Paciente ").append(c.getPaciente().getNombre())
                     .append(" | Médico ").append(c.getMedico().getNombre())
-                    .append(" | ").append(c.getFechaHora())
+                    .append(" | ").append(c.getFecha())
                     .append(" | ").append(c.getEstado()).append("\n");
         }
         mostrarMensaje(sb.toString());
@@ -426,11 +417,10 @@ public class ventana extends javax.swing.JFrame {
             }
             mostrarMensaje("Médico encontrado:\n" + m);
 
-            String fechaStr = JOptionPane.showInputDialog(this, "Fecha y hora (AAAA-MM-DDTHH:MM):");
-            if (fechaStr == null) {
+            String fecha = JOptionPane.showInputDialog(this, "Fecha y hora (dd/MM/yyyy):");
+            if (fecha == null) {
                 return;
             }
-            LocalDateTime fecha = LocalDateTime.parse(fechaStr);
             if (confirmar("¿Confirma agendar la consulta?")) {
                 Consulta c = new Consulta(idConsulta, p, m, fecha);
                 fachada.programarConsulta(c);
@@ -465,12 +455,6 @@ public class ventana extends javax.swing.JFrame {
         }
     }
 
-//    private Optional<Consulta> buscarConsultaPorId(int id) {
-//        List<Consulta> todas = fachada.consultasPorPeriodo(
-//                LocalDateTime.of(1900, 1, 1, 0, 0),
-//                LocalDateTime.of(2100, 1, 1, 0, 0));
-//        return todas.stream().filter(c -> c.getId() == id).findFirst();
-//    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -810,7 +794,7 @@ public class ventana extends javax.swing.JFrame {
         jRadioButton2.setText("Por ID del médico");
 
         buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setText("Por periodo de tiempo");
+        jRadioButton3.setText("Por fecha");
 
         jLabel15.setText("ID:");
 
@@ -899,7 +883,7 @@ public class ventana extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 473, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -966,7 +950,7 @@ public class ventana extends javax.swing.JFrame {
         } else if (jRadioButton2.isSelected()) {
             consultasPorMedicoGUI();
         } else if (jRadioButton3.isSelected()) {
-            consultasPorPeriodoGUI();
+            buscarConsultasPorFechaGUI();
         } else {
             mostrarConsultas(null, null);
         }
