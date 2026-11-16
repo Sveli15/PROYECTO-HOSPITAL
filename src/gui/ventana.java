@@ -55,33 +55,15 @@ public class ventana extends javax.swing.JFrame {
     if (id <= 0) {
         return;
     }   
-        String nombre;
-        
-     while(true){
 
-           nombre = JOptionPane.showInputDialog(this, "Nombre:");
-           
-            if (nombre == null || nombre.isBlank()) {
-                mostrarError(new IllegalArgumentException("El nombre no puede estar vacío."));
-                return;
-            }
-            if(nombre.matches("^[a-zA-Z]+$")){
-              break;
-              
-            }else{
-                JOptionPane.showMessageDialog(null, "solo se permiten letras, intente nuevamente",
-                        "ERROR", JOptionPane.ERROR_MESSAGE);        
-            }
-         }
-     
          try{
- 
+            String nombre = JOptionPane.showInputDialog(this, "Nombre:"); 
             String edadStr = JOptionPane.showInputDialog(this, "Edad:");
             int edad = Integer.parseInt(edadStr);
             String direccion = JOptionPane.showInputDialog(this, "Dirección:");
             fachada.agregarPaciente(new Paciente(id, nombre, edad, direccion));
             mostrarMensaje("Paciente agregado correctamente.");
-        } catch (HeadlessException | NumberFormatException ex) {
+        } catch (HeadlessException | IllegalArgumentException ex) {
             mostrarError(ex);
         }
      }
@@ -233,10 +215,6 @@ public class ventana extends javax.swing.JFrame {
                 return;
             }
             String nombre = JOptionPane.showInputDialog(this, "Nombre del médico:");
-            if (nombre == null || nombre.isBlank()) {
-                mostrarError(new IllegalArgumentException("El nombre no puede estar vacío."));
-                return;
-            }
             StringBuilder esp = new StringBuilder("Especialidades disponibles:\n");
             for (Especialidad e : fachada.listarEspecialidades()) {
                 esp.append(e.getId()).append(" - ").append(e.getNombre()).append("\n");
@@ -246,13 +224,9 @@ public class ventana extends javax.swing.JFrame {
                 return;
             }
             Especialidad especialidad = fachada.obtenerEspecialidadPorId(idEsp);
-            if (especialidad == null) {
-                mostrarMensaje("La especialidad indicada no existe.");
-                return;
-            }
             fachada.agregarMedico(new Medico(id, nombre, especialidad));
             mostrarMensaje("Médico agregado correctamente.");
-        } catch (HeadlessException | NumberFormatException ex) {
+        } catch (HeadlessException | IllegalArgumentException ex) {
             mostrarError(ex);
         }
     }
@@ -301,6 +275,20 @@ public class ventana extends javax.swing.JFrame {
         }
     }
 
+    private void agregarEquipoGUI(){
+        try{
+            int id = Integer.parseInt(txtIdEM3.getText());
+            if(id <= 0){
+                return;
+            }
+            String nombre = JOptionPane.showInputDialog(this,"Nombre del equipo: ");
+            int cantidad = Integer.parseInt(JOptionPane.showInputDialog(this,"Cantidad del equipo: "));
+            fachada.agregarEquipoMedico(new EquipoMedico(id,nombre,cantidad));
+        } catch( HeadlessException | IllegalArgumentException ex){
+            mostrarError(ex);
+        }
+    }
+    
     private void inventariarEquipoGUI() {
         try {
             int id = Integer.parseInt(txtIdEM2.getText());
@@ -520,6 +508,10 @@ public class ventana extends javax.swing.JFrame {
         txtIdEM2 = new javax.swing.JTextField();
         btnInventariar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        txtIdEM3 = new javax.swing.JTextField();
+        BtnAgregarEM = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         jRadioButton1 = new javax.swing.JRadioButton();
@@ -568,7 +560,7 @@ public class ventana extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel3);
@@ -627,7 +619,7 @@ public class ventana extends javax.swing.JFrame {
                         .addComponent(cmbPacientes, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(checkDirPac))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -648,7 +640,7 @@ public class ventana extends javax.swing.JFrame {
                 .addComponent(checkEdadPac)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnListPac)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Pacientes", jPanel1);
@@ -688,7 +680,7 @@ public class ventana extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbMedicos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addContainerGap(167, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Médicos", jPanel2);
@@ -728,6 +720,23 @@ public class ventana extends javax.swing.JFrame {
             }
         });
 
+        txtIdEM3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIdEM3ActionPerformed(evt);
+            }
+        });
+
+        BtnAgregarEM.setText("Agregar equipo medico");
+        BtnAgregarEM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAgregarEMActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("ID:");
+
+        jLabel18.setText("Para agregar nuevo equipo medico, ingrese el ID:");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -735,10 +744,6 @@ public class ventana extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(btnInventariar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -748,8 +753,20 @@ public class ventana extends javax.swing.JFrame {
                     .addComponent(jLabel11)
                     .addComponent(jLabel10)
                     .addComponent(jLabel13)
-                    .addComponent(txtIdEM2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                    .addComponent(txtIdEM2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addComponent(jLabel17)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(txtIdEM3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnAgregarEM))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                            .addComponent(btnInventariar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(67, 67, 67)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -771,7 +788,15 @@ public class ventana extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnInventariar)
                     .addComponent(jButton1))
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel17)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtIdEM3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(BtnAgregarEM)))
+                .addGap(0, 26, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Inventario", jPanel4);
@@ -838,7 +863,7 @@ public class ventana extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtIdConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -865,7 +890,7 @@ public class ventana extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Consultas", jPanel5);
@@ -874,7 +899,7 @@ public class ventana extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 473, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -955,6 +980,14 @@ public class ventana extends javax.swing.JFrame {
         cancelarConsultaGUI();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void txtIdEM3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdEM3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdEM3ActionPerformed
+
+    private void BtnAgregarEMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarEMActionPerformed
+        agregarEquipoGUI();
+    }//GEN-LAST:event_BtnAgregarEMActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -991,6 +1024,7 @@ public class ventana extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnAgregarEM;
     private javax.swing.JButton btnAgendarConsulta;
     private javax.swing.JButton btnConsultar;
     private javax.swing.JButton btnInventariar;
@@ -1011,6 +1045,8 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1034,6 +1070,7 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JTextField txtIdDoc;
     private javax.swing.JTextField txtIdEM;
     private javax.swing.JTextField txtIdEM2;
+    private javax.swing.JTextField txtIdEM3;
     private javax.swing.JTextField txtIdPac;
     // End of variables declaration//GEN-END:variables
 }
