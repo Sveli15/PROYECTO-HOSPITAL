@@ -1,6 +1,5 @@
 package fachada;
 
-import java.time.LocalDateTime;
 import modelo.*;
 import java.util.List;
 
@@ -32,6 +31,6 @@ public interface IPersistenciaFachada {
     List<Consulta> listarConsultas();
     List<Consulta> consultasPorPaciente(int idPaciente);
     List<Consulta> consultasPorMedico(int idMedico);
-    List<Consulta> consultasPorPeriodo(LocalDateTime inicio, LocalDateTime fin);
+    List<Consulta> buscarConsultasPorFecha(String patronFecha);
     void cancelarConsulta(int idConsulta);
 }
