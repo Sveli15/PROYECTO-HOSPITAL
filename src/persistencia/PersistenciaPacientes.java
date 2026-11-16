@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class PersistenciaPacientes {
@@ -132,4 +134,22 @@ public class PersistenciaPacientes {
     public List<Paciente> listarPacientes() {
         return new ArrayList<>(pacientes);
     }
+    
+    public List<Paciente> buscarPorNombre(String patron) {
+
+    List<Paciente> encontrados = new ArrayList<>();
+
+    Pattern pattern = Pattern.compile(patron, Pattern.CASE_INSENSITIVE);
+
+    for (Paciente p : pacientes) {
+
+        Matcher matcher = pattern.matcher(p.getNombre());
+
+        if (matcher.find()) {
+            encontrados.add(p);
+        }
+    }
+
+    return encontrados;
+}
 }

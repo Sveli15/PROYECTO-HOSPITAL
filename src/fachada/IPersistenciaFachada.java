@@ -10,6 +10,7 @@ public interface IPersistenciaFachada {
     void eliminarPacientePorId(int id);
     List<Paciente> listarPacientes();
     List<Paciente> listarPacientes(String direccion, Integer edadMin, Integer edadMax);
+    List<Paciente> buscarPorNombre(String patron);
     
     void agregarMedico(Medico medico);
     Medico obtenerMedicoPorId(int id);

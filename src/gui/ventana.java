@@ -69,20 +69,17 @@ public class ventana extends javax.swing.JFrame {
         }
     }
      
-    
-    private void Buscarpornombrepac(){
-        
-        String patron = txtbuscpac.getText().trim();
+   private void Buscarpornombrepac(){
 
-        List<Paciente> pacientes = fachada.listarPacientes();
+    String patron = txtbuscpac.getText().trim();
 
-        DefaultTableModel modelo = (DefaultTableModel) tblbuscpac.getModel();
+    List<Paciente> pacientes = fachada.buscarPorNombre(patron);
 
-        modelo.setRowCount(0);
+    DefaultTableModel modelo = (DefaultTableModel) tblbuscpac.getModel();
 
-        for (Paciente p : pacientes) {
-       
-        if (p.getNombre().toLowerCase().contains(patron.toLowerCase())) {
+    modelo.setRowCount(0);
+
+    for (Paciente p : pacientes) {
 
         modelo.addRow(new Object[]{
             p.getId(),
@@ -90,11 +87,8 @@ public class ventana extends javax.swing.JFrame {
             p.getEdad(),
             p.getDireccion()
         });
-
     }
 }
-                   
-    }
     
      private void buscarConsultasPorFecha(){
      String patron = txtbusccon.getText().trim();

@@ -130,4 +130,9 @@ public class PersistenciaFachada implements IPersistenciaFachada {
     public void cancelarConsulta(int idConsulta) {
         persistenciaConsultas.cancelarConsulta(idConsulta);
     }
+
+    @Override
+    public List<Paciente> buscarPorNombre(String patron) {
+         return persistenciaPacientes.buscarPorNombre(patron); 
+    }
 }
