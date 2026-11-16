@@ -4,6 +4,7 @@ import fachada.PersistenciaFachada;
 import java.awt.HeadlessException;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import modelo.Consulta;
 import modelo.EquipoMedico;
 import modelo.Especialidad;
@@ -65,7 +66,58 @@ public class ventana extends javax.swing.JFrame {
     }
      
     
+    private void Buscarpornombrepac(){
+        
+        String patron = txtbuscpac.getText().trim();
+
+        List<Paciente> pacientes = fachada.listarPacientes();
+
+        DefaultTableModel modelo = (DefaultTableModel) tblbuscpac.getModel();
+
+        modelo.setRowCount(0);
+
+        for (Paciente p : pacientes) {
+       
+        if (p.getNombre().toLowerCase().contains(patron.toLowerCase())) {
+
+        modelo.addRow(new Object[]{
+            p.getId(),
+            p.getNombre(),
+            p.getEdad(),
+            p.getDireccion()
+        });
+
+    }
+}
+                   
+    }
     
+     private void buscarConsultasPorFecha(){
+         
+         String patron = txtbusccon.getText().trim();
+
+         List<Consulta> consultas = fachada.listarConsultas();
+
+         DefaultTableModel modelo = (DefaultTableModel) tblbusccon.getModel();
+
+         modelo.setRowCount(0);
+
+         for (Consulta c : consultas) {
+
+         if (c.getFecha().toString().contains(patron)) {
+
+        modelo.addRow(new Object[]{
+            c.getId(),
+            c.getPaciente().getNombre(),
+            c.getMedico().getNombre(),    
+            c.getFecha(),
+            c.getEstado()
+        });
+
+    }
+}
+             
+    }
     
 
     private void consultarPacienteGUI() {
@@ -530,6 +582,21 @@ public class ventana extends javax.swing.JFrame {
         btnAgendarConsulta = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        txtbusccon = new javax.swing.JTextField();
+        btnbuscarcon = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblbusccon = new javax.swing.JTable();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        txtbuscpac = new javax.swing.JTextField();
+        btnbuscpac = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblbuscpac = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -919,11 +986,148 @@ public class ventana extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Consultas", jPanel5);
 
+        jLabel22.setText("BUSCAR CONSULTA");
+
+        jLabel23.setText("ingrese la fecha de consulta formato DD/MM/ AAAA");
+
+        btnbuscarcon.setText("BUSCAR");
+        btnbuscarcon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbuscarconActionPerformed(evt);
+            }
+        });
+
+        tblbusccon.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "PACIENTE", "MEDICO", "FECHA", "ESTADO"
+            }
+        ));
+        jScrollPane3.setViewportView(tblbusccon);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(84, 84, 84))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addComponent(txtbusccon, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41))))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(175, 175, 175)
+                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(193, 193, 193)
+                        .addComponent(btnbuscarcon)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 24, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtbusccon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnbuscarcon)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
+        );
+
+        jTabbedPane2.addTab("Consultas", jPanel6);
+
+        jLabel20.setText("BUSCAR PACIENTES");
+
+        jLabel21.setText("Ingrese el nombre del paciente. Ejemplo: Mar | mario");
+
+        btnbuscpac.setText("BUSCAR");
+        btnbuscpac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbuscpacActionPerformed(evt);
+            }
+        });
+
+        tblbuscpac.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "ID", "NOMBRE", "EDAD", "DIRECCION"
+            }
+        ));
+        jScrollPane2.setViewportView(tblbuscpac);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 22, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(164, 164, 164))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(67, 67, 67))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addComponent(txtbuscpac, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addComponent(btnbuscpac)
+                        .addGap(189, 189, 189))))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtbuscpac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnbuscpac)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        jTabbedPane2.addTab("Pacientes", jPanel7);
+
+        jTabbedPane1.addTab("Buscar", jTabbedPane2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 473, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1016,6 +1220,14 @@ public class ventana extends javax.swing.JFrame {
         agregarEspecialidadGUI();
     }//GEN-LAST:event_btnAgregarEspActionPerformed
 
+    private void btnbuscpacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbuscpacActionPerformed
+       Buscarpornombrepac();
+    }//GEN-LAST:event_btnbuscpacActionPerformed
+
+    private void btnbuscarconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbuscarconActionPerformed
+       buscarConsultasPorFecha();
+    }//GEN-LAST:event_btnbuscarconActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1059,6 +1271,8 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JButton btnInventariar;
     private javax.swing.JButton btnInventario;
     private javax.swing.JButton btnListPac;
+    private javax.swing.JButton btnbuscarcon;
+    private javax.swing.JButton btnbuscpac;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox checkDirPac;
     private javax.swing.JCheckBox checkEdadPac;
@@ -1078,6 +1292,10 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1090,12 +1308,19 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel lblImagenlol;
+    private javax.swing.JTable tblbusccon;
+    private javax.swing.JTable tblbuscpac;
     private javax.swing.JTextField txtEspID;
     private javax.swing.JTextField txtIdConsultar;
     private javax.swing.JTextField txtIdDoc;
@@ -1103,5 +1328,7 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JTextField txtIdEM2;
     private javax.swing.JTextField txtIdEM3;
     private javax.swing.JTextField txtIdPac;
+    private javax.swing.JTextField txtbusccon;
+    private javax.swing.JTextField txtbuscpac;
     // End of variables declaration//GEN-END:variables
 }
