@@ -91,9 +91,7 @@ public class ventana extends javax.swing.JFrame {
 }
     
      private void buscarConsultasPorFecha(){
-     String patron = txtbusccon.getText().trim();
-
-    List<Consulta> consultas = fachada.listarConsultas();
+      String patron = txtbusccon.getText().trim();
 
     DefaultTableModel modelo = (DefaultTableModel) tblbusccon.getModel();
 
@@ -101,25 +99,17 @@ public class ventana extends javax.swing.JFrame {
 
     try {
 
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-
-        LocalDate fechaBuscada = LocalDate.parse(patron, formato);
-
-        String fechaConvertida = fechaBuscada.toString();
+        List<Consulta> consultas = fachada.buscarConsultasPorFecha(patron);
 
         for (Consulta c : consultas) {
 
-            if (c.getFecha().startsWith(fechaConvertida)) {
-
-                modelo.addRow(new Object[]{
-                    c.getId(),
-                    c.getPaciente().getNombre(),
-                    c.getMedico().getNombre(),
-                    c.getFecha(),
-                    c.getEstado()
-                });
-
-            }
+            modelo.addRow(new Object[]{
+                c.getId(),
+                c.getPaciente().getNombre(),
+                c.getMedico().getNombre(),
+                c.getFecha(),
+                c.getEstado()
+            });
         }
 
     } catch (DateTimeParseException e) {

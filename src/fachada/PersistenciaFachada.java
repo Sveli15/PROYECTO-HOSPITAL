@@ -135,4 +135,11 @@ public class PersistenciaFachada implements IPersistenciaFachada {
     public List<Paciente> buscarPorNombre(String patron) {
          return persistenciaPacientes.buscarPorNombre(patron); 
     }
+
+    @Override
+    public List<Consulta> buscarConsultasPorFechaa(String patronFecha) {
+        
+         return persistenciaConsultas.buscarConsultasPorFecha(patronFecha);
+        
+    }
 }

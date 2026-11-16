@@ -34,4 +34,5 @@ public interface IPersistenciaFachada {
     List<Consulta> consultasPorMedico(int idMedico);
     List<Consulta> buscarConsultasPorFecha(String patronFecha);
     void cancelarConsulta(int idConsulta);
+    List<Consulta> buscarConsultasPorFechaa(String patronFecha);
 }

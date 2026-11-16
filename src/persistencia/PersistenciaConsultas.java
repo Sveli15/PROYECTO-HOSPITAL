@@ -5,8 +5,11 @@ import modelo.Consulta;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class PersistenciaConsultas {
 
@@ -103,4 +106,28 @@ public class PersistenciaConsultas {
         }
         throw new IllegalArgumentException("No existe una consulta con ID " + idConsulta);
     }
+    
+    public List<Consulta> buscarConsultasPorFechaa(String patronFecha) {
+
+    List<Consulta> encontradas = new ArrayList<>();
+
+    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+
+    LocalDate fecha = LocalDate.parse(patronFecha, formato);
+
+    String fechaConvertida = fecha.toString();
+
+    Pattern pattern = Pattern.compile("^" + Pattern.quote(fechaConvertida));
+
+    for (Consulta c : consultas) {
+
+        if (c.getFecha() != null && pattern.matcher(c.getFecha()).find()) {
+
+            encontradas.add(c);
+
+        }
+    }
+
+    return encontradas;
+}
 }
