@@ -49,7 +49,31 @@ public class PersistenciaMedicos {
         }
     }
 
+    private void validarNombreMedico(String nombre){
+        if(nombre == null || nombre.isBlank()){
+            throw new IllegalArgumentException("El nombre no puede estar vacio");
+        }
+        if(nombre.matches("([a-zA-ZáéíóúñÑ\\s]){1,50}")){
+            System.out.println("Nombre valido.");
+        } else{
+            throw new IllegalArgumentException("Nombre invalido.");
+        }
+    } 
+    
+    private void validarEspecialidad(String especialidad){
+        if(especialidad == null || especialidad.isBlank()){
+            throw new IllegalArgumentException("La especialidad no puede estar vacia");
+        }
+        if(especialidad.matches("([a-zA-ZáéíóúñÑ\\s]){1,30}")){
+            System.out.println("Especialidad valida.");
+        } else{
+            throw new IllegalArgumentException("Especialidad invalida.");
+        }
+    }
+            
     public void agregarMedico(Medico medico) {
+        validarNombreMedico(medico.getNombre());
+        validarEspecialidad(medico.getEspecialidad().getNombre());
         medicos.add(medico);
         guardar();
     }
