@@ -2,7 +2,6 @@ package sistemahospital;
 
 import modelo.*;
 import fachada.IPersistenciaFachada;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -235,12 +234,9 @@ public class MenuPrincipal {
             }
             System.out.println("Médico encontrado: " + medico);
 
-            System.out.print("Fecha (AAAA-MM-DDTHH:MM): ");
-            LocalDateTime fecha = LocalDateTime.parse(scanner.nextLine().trim());
-            if (fecha.isBefore(LocalDateTime.now())) {
-                System.out.println("La fecha de la consulta no puede ser pasada.");
-                return;
-            }
+            System.out.print("Fecha (dd/MM/yyyy): ");
+            String fecha= scanner.nextLine();
+            
 
             if (confirmar("¿Confirma agendar la consulta?")) {
                 Consulta consulta = new Consulta(id, paciente, medico, fecha);
@@ -381,13 +377,17 @@ public class MenuPrincipal {
                 mostrarConsultas(resultado, "No hay consultas para ese médico.");
             }
             case 3 -> {
-                System.out.print("Fecha de inicio (AAAA-MM-DDTHH:MM): ");
-                LocalDateTime inicio = LocalDateTime.parse(scanner.nextLine().trim());
-                System.out.print("Fecha de fin (AAAA-MM-DDTHH:MM): ");
-                LocalDateTime fin = LocalDateTime.parse(scanner.nextLine().trim());
-                List<Consulta> resultado = consultas.stream().filter(c -> !c.getFechaHora().isBefore(inicio)
-                        && !c.getFechaHora().isAfter(fin)).toList();
-                mostrarConsultas(resultado, "No hay consultas en ese periodo.");
+                System.out.println("Fecha de consulta: ");
+                String fechaC= scanner.nextLine();
+                if(fechaC == null || fechaC.isBlank()){
+                    throw new IllegalArgumentException("La fecha no puede estar vacia.");
+                }
+                if(fechaC.matches("(0[1-9]|[12][0-9]|3[01])\\/(0[1-9]|1[0,1,2])\\/(19|20)\\d{2}")){
+                    List<Consulta> resultado = consultas.stream().filter(c -> (c.getFecha().equals(fechaC))).toList();
+                    mostrarConsultas(resultado, "No hay consultas en esa fecha.");
+                } else{
+                    throw new IllegalArgumentException("Fecha invalida.");
+                }
             }
             case 4 ->
                 mostrarConsultas(consultas, "No hay consultas registradas.");
