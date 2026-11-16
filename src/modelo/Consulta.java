@@ -1,8 +1,6 @@
 package modelo;
 
 import fachada.IPersistenciaFachada;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Consulta {
 
@@ -13,16 +11,15 @@ public class Consulta {
     private final int id;
     private final Paciente paciente;
     private final Medico medico;
-    private final LocalDateTime fechaHora;
+    private final String fecha;
     private Estado estado;
 
-    private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    public Consulta(int id, Paciente paciente, Medico medico, LocalDateTime fechaHora) {
+    public Consulta(int id, Paciente paciente, Medico medico, String fecha) {
         this.id = id;
         this.paciente = paciente;
         this.medico = medico;
-        this.fechaHora = fechaHora;
+        this.fecha = fecha;
         this.estado = Estado.PROGRAMADA;
     }
 
@@ -38,8 +35,8 @@ public class Consulta {
         return medico;
     }
 
-    public LocalDateTime getFechaHora() {
-        return fechaHora;
+    public String getFecha(){
+        return fecha;
     }
 
     public Estado getEstado() {
@@ -51,14 +48,14 @@ public class Consulta {
     }
 
     public String toArchivo() {
-        return id + "|" + paciente.getId() + "|" + medico.getId() + "|" + fechaHora.format(FMT) + "|" + estado.name();
+        return id + "|" + paciente.getId() + "|" + medico.getId() + "|" + fecha + "|" + estado.name();
     }
 
     public static Consulta fromArchivo(String linea, IPersistenciaFachada fachada) {
         String[] p = linea.split("\\|", -1);
         Paciente paciente = fachada.obtenerPacientePorId(Integer.parseInt(p[1]));
         Medico medico = fachada.obtenerMedicoPorId(Integer.parseInt(p[2]));
-        Consulta c = new Consulta(Integer.parseInt(p[0]), paciente, medico, LocalDateTime.parse(p[3], FMT));
+        Consulta c = new Consulta(Integer.parseInt(p[0]), paciente, medico, String.valueOf(p[3]));
         c.setEstado(Estado.valueOf(p[4]));
         return c;
     }
@@ -66,6 +63,6 @@ public class Consulta {
     @Override
     public String toString() {
         return "Consulta [ID= " + id + ", Paciente= " + paciente + ", Médico= " 
-                + medico + ", fechaHora= " + fechaHora + ", estado= " + estado + "]";
+                + medico + ", fecha = " + fecha + ", estado= " + estado + "]";
     }
 }
