@@ -56,16 +56,30 @@ public class PersistenciaPacientes {
         if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío.");
         } 
-        if(nombre.matches("^[a-zA-Z]+$")){
+        if(nombre.matches("([a-zA-ZáéíóúñÑ\\s]){1,50}")){
             System.out.println("Nombre válido");
         }else{
             throw new IllegalArgumentException("El nombre no es valido."); 
         }
     }
-
-    private void validarEdad(int edad) {
-        if (edad <= 0) {
-            throw new IllegalArgumentException("La edad no puede ser cero.");
+    
+    private void validarEdad(int edad){
+        String edadSt = Integer.toString(edad);
+        if(edadSt.matches("[0-9]{1}[0-9]?[0]?")){
+            System.out.println("Edad valida");
+        } else {
+            throw new IllegalArgumentException("La edad debe estar entre 0 y 120");
+        }
+    }
+    
+    private void validarDireccion(String direccion){
+        if(direccion == null || direccion.isBlank()){
+            throw new IllegalArgumentException("La direccion no puede estar vacia");
+        }
+        if(direccion.matches("([.,a-zA-ZáéíóúñÑ0-9\\s]){1,50}")){
+           System.out.println("Direccion valida");
+        } else{
+            throw new IllegalArgumentException("La direccion es invalida");
         }
     }
 
@@ -73,6 +87,7 @@ public class PersistenciaPacientes {
         validarIdPositivo(paciente.getId());
         validarNombre(paciente.getNombre());
         validarEdad(paciente.getEdad());
+        validarDireccion(paciente.getDireccion());
         if (obtenerPacientePorId(paciente.getId()) != null) {
             throw new IllegalArgumentException("Ya existe un paciente con ese ID.");
         }
