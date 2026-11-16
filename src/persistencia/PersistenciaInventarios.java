@@ -51,21 +51,29 @@ public class PersistenciaInventarios {
         }
     }
 
-    private void validarNombre(String nombre) {
+    private void validarNombreEquipo(String nombre) {
         if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+        if(nombre.matches("([a-zA-ZáéíóúñÑ\\s]){1,30}")){
+            System.out.println("El nombre del equipo es valido");
+        } else {
+            throw new IllegalArgumentException("El nombre del equipo es invalido");
         }
     }
 
     private void validarCantidad(int cantidad) {
-        if (cantidad < 0) {
+        String cantidadSt = Integer.toString(cantidad);
+        if (cantidadSt.matches("[1-9]+")) {
+            System.out.println("Cantidad valida");
+        } else{
             throw new IllegalArgumentException("La cantidad no puede ser negativa.");
         }
     }
 
     public void agregarEquipoMedico(EquipoMedico equipo) {
         validarIdPositivo(equipo.getId());
-        validarNombre(equipo.getNombre());
+        validarNombreEquipo(equipo.getNombre());
         validarCantidad(equipo.getCantidad());
         if (obtenerEquipoPorId(equipo.getId()) != null) {
             throw new IllegalArgumentException("Ya existe un equipo con ese ID.");
