@@ -5,7 +5,6 @@ import modelo.Consulta;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,9 +89,9 @@ public class PersistenciaConsultas {
         return consultas.stream().filter(c -> c.getMedico().getId() == idMedico).toList();
     }
 
-//    public List<Consulta> consultasPorPeriodo(LocalDateTime inicio, LocalDateTime fin) {
-//        return consultas.stream().filter(c -> !c.getFecha().isBefore(inicio)).filter(c -> !c.getFecha().isAfter(fin)).toList();
-//    }
+    public List<Consulta> buscarConsultasPorFecha(String patronFecha) {
+        return consultas.stream().filter(c -> (c.getFecha() == null ? patronFecha == null : c.getFecha().equals(patronFecha))).toList();
+    }
 
     public void cancelarConsulta(int idConsulta) {
         for (Consulta c : consultas) {
