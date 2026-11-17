@@ -91,15 +91,29 @@ public class ventana extends javax.swing.JFrame {
 }
     
      private void buscarConsultasPorFecha(){
-      String patron = txtbusccon.getText().trim();
+     
+   
+    String patron = txtbusccon.getText().trim();
 
-    DefaultTableModel modelo = (DefaultTableModel) tblbusccon.getModel();
+
+System.out.println("Fecha escrita: [" + patron + "]");
+
+    DefaultTableModel modelo =
+        (DefaultTableModel) tblbusccon.getModel();
 
     modelo.setRowCount(0);
 
     try {
 
-        List<Consulta> consultas = fachada.buscarConsultasPorFecha(patron);
+        List<Consulta> consultas =
+            fachada.buscarConsultasPorFecha(patron);
+        
+        System.out.println("Consultas encontradas: " + consultas.size());
+
+        if (consultas.isEmpty()) {
+            mostrarMensaje("No se encontraron consultas para esa fecha.");
+            return;
+        }
 
         for (Consulta c : consultas) {
 
@@ -112,13 +126,11 @@ public class ventana extends javax.swing.JFrame {
             });
         }
 
-    } catch (DateTimeParseException e) {
-
-        JOptionPane.showMessageDialog(this,
-                "Ingresa la fecha en formato dd/MM/yyyy");
-
+    } catch (IllegalArgumentException e) {
+        mostrarMensaje(e.getMessage());
     }
 }
+
      
 
     private void consultarPacienteGUI() {
@@ -1226,7 +1238,8 @@ public class ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_btnbuscpacActionPerformed
 
     private void btnbuscarconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbuscarconActionPerformed
-       buscarConsultasPorFecha();
+      buscarConsultasPorFecha();
+              
     }//GEN-LAST:event_btnbuscarconActionPerformed
 
     /**

@@ -7,8 +7,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PersistenciaConsultas {
@@ -92,9 +94,7 @@ public class PersistenciaConsultas {
         return consultas.stream().filter(c -> c.getMedico().getId() == idMedico).toList();
     }
 
-    public List<Consulta> buscarConsultasPorFecha(String patronFecha) {
-        return consultas.stream().filter(c -> (c.getFecha() == null ? patronFecha == null : c.getFecha().equals(patronFecha))).toList();
-    }
+  
 
     public void cancelarConsulta(int idConsulta) {
         for (Consulta c : consultas) {
@@ -107,24 +107,62 @@ public class PersistenciaConsultas {
         throw new IllegalArgumentException("No existe una consulta con ID " + idConsulta);
     }
     
-    public List<Consulta> buscarConsultasPorFechaa(String patronFecha) {
+   public List<Consulta> buscarConsultasPorFecha(String patronFecha) {
+     List<Consulta> encontradas = new ArrayList<>();
 
-    List<Consulta> encontradas = new ArrayList<>();
+    Pattern patronEntrada = Pattern.compile(
+        "^(\\d{2})/(\\d{2})/(\\d{4})$"
+    );
 
-    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+    Matcher matcherEntrada = patronEntrada.matcher(patronFecha);
 
-    LocalDate fecha = LocalDate.parse(patronFecha, formato);
+    if (!matcherEntrada.matches()) {
+        throw new IllegalArgumentException("Formato inválido. Usa dd/MM/yyyy.");
+    }
 
-    String fechaConvertida = fecha.toString();
+    String diaBuscado = matcherEntrada.group(1);
+    String mesBuscado = matcherEntrada.group(2);
+    String anioBuscado = matcherEntrada.group(3);
 
-    Pattern pattern = Pattern.compile("^" + Pattern.quote(fechaConvertida));
+    // Reconoce yyyy-MM-ddTHH:mm:ss o yyyy-MM-dd
+    Pattern patronISO = Pattern.compile(
+        "^(\\d{4})-(\\d{2})-(\\d{2})(?:T.*)?$"
+    );
+
+    // Reconoce dd/MM/yyyy
+    Pattern patronNormal = Pattern.compile(
+        "^(\\d{2})/(\\d{2})/(\\d{4})$"
+    );
 
     for (Consulta c : consultas) {
 
-        if (c.getFecha() != null && pattern.matcher(c.getFecha()).find()) {
+        String fechaGuardada = c.getFecha();
+
+        Matcher matcherISO = patronISO.matcher(fechaGuardada);
+        Matcher matcherNormal = patronNormal.matcher(fechaGuardada);
+
+        String dia = "";
+        String mes = "";
+        String anio = "";
+
+        if (matcherISO.matches()) {
+
+            anio = matcherISO.group(1);
+            mes = matcherISO.group(2);
+            dia = matcherISO.group(3);
+
+        } else if (matcherNormal.matches()) {
+
+            dia = matcherNormal.group(1);
+            mes = matcherNormal.group(2);
+            anio = matcherNormal.group(3);
+        }
+
+        if (dia.equals(diaBuscado)
+                && mes.equals(mesBuscado)
+                && anio.equals(anioBuscado)) {
 
             encontradas.add(c);
-
         }
     }
 

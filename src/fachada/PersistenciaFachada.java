@@ -121,10 +121,7 @@ public class PersistenciaFachada implements IPersistenciaFachada {
         return persistenciaConsultas.consultasPorMedico(idMedico);
     }
 
-    @Override
-    public List<Consulta> buscarConsultasPorFecha(String patronFecha) {
-        return persistenciaConsultas.buscarConsultasPorFecha(patronFecha);
-    }
+ 
 
     @Override
     public void cancelarConsulta(int idConsulta) {
@@ -137,9 +134,8 @@ public class PersistenciaFachada implements IPersistenciaFachada {
     }
 
     @Override
-    public List<Consulta> buscarConsultasPorFechaa(String patronFecha) {
-        
+    public List<Consulta> buscarConsultasPorFecha(String patronFecha) {
          return persistenciaConsultas.buscarConsultasPorFecha(patronFecha);
-        
-    }
+         
+            }
 }
