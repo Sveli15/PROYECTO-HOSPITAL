@@ -56,15 +56,28 @@ public class PersistenciaConsultas {
 
     
     private void validaFechaConsulta(String fecha){
-        if(fecha == null || fecha.isBlank()){
-            throw new IllegalArgumentException("La fecha no puede estar vacia.");
-        }
-        if(fecha.matches("(0[1-9]|[12][0-9]|3[01])\\/(0[1-9]|1[0,1,2])\\/(19|20)\\d{2}")){
-            System.out.println("Fecha valida.");
-        } else{
-            throw new IllegalArgumentException("Fecha invalida.");
-        }
+         if (fecha == null || fecha.isBlank()) {
+        throw new IllegalArgumentException("La fecha no puede estar vacía.");
     }
+
+    Pattern patron = Pattern.compile(
+        "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)\\d{2}$"
+    );
+
+    Matcher matcher = patron.matcher(fecha);
+
+    if (!matcher.matches()) {
+        throw new IllegalArgumentException("Formato inválido. Usa dd/MM/yyyy.");
+    }
+
+    try {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+        LocalDate.parse(fecha, formato);
+
+    } catch (DateTimeParseException e) {
+        throw new IllegalArgumentException("La fecha no existe en el calendario.");
+    }
+}
     
     
     private void validaIdConsulta(int id){
