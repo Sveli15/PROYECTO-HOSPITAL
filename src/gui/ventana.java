@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Consulta;
@@ -57,17 +59,56 @@ public class ventana extends javax.swing.JFrame {
             return;
         }   
 
-         try{
-            String nombre = JOptionPane.showInputDialog(this, "Nombre:"); 
-            String edadStr = JOptionPane.showInputDialog(this, "Edad:");
-            int edad = Integer.parseInt(edadStr);
-            String direccion = JOptionPane.showInputDialog(this, "Dirección:");
-            fachada.agregarPaciente(new Paciente(id, nombre, edad, direccion));
-            mostrarMensaje("Paciente agregado correctamente.");
-        } catch (HeadlessException | IllegalArgumentException ex) {
-            mostrarError(ex);
+        
+     try {
+
+        if (id <= 0) {
+            mostrarMensaje("El ID debe ser mayor que cero.");
+            return;
         }
+
+        String nombre = JOptionPane.showInputDialog(this, "Nombre:");
+
+        if (nombre == null) return;
+
+        nombre = nombre.trim();
+
+        if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+            mostrarMensaje("El nombre no puede contener números.");
+            return;
+        }
+
+        String edadStr = JOptionPane.showInputDialog(this, "Edad:");
+
+        if (edadStr == null) return;
+
+        if (!edadStr.matches("\\d+") || Integer.parseInt(edadStr) <= 0) {
+            mostrarMensaje("La edad debe ser un número positivo.");
+            return;
+        }
+
+        String direccion = JOptionPane.showInputDialog(this, "Dirección:");
+
+        if (direccion == null) return;
+
+        if (direccion.trim().isEmpty()) {
+            mostrarMensaje("La dirección no puede estar vacía.");
+            return;
+        }
+
+        int edad = Integer.parseInt(edadStr);
+
+        fachada.agregarPaciente(new Paciente(id, nombre, edad, direccion));
+
+        mostrarMensaje("Paciente agregado correctamente.");
+
+    } catch (NumberFormatException ex) {
+        mostrarMensaje("El ID debe ser un número entero.");
+    } catch (HeadlessException | IllegalArgumentException ex) {
+        mostrarError(ex);
     }
+}
+    
      
    private void Buscarpornombrepac(){
 
