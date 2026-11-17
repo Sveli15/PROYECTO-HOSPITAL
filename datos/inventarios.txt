@@ -1,0 +1,2 @@
+6|Medicina|6
+16|Pastilla|12

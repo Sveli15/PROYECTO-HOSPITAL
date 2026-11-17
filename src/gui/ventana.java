@@ -398,18 +398,62 @@ System.out.println("Fecha escrita: [" + patron + "]");
     }
 
     private void agregarEquipoGUI(){
-        try{
-            int id = Integer.parseInt(txtIdEM3.getText());
-            if(id <= 0){
+         try {
+        int id = Integer.parseInt(txtIdEM3.getText());
+
+        if (id <= 0) {
+            mostrarMensaje("El ID debe ser mayor que cero.");
+            return;
+        }
+
+        String nombre;
+
+        while (true) {
+            nombre = JOptionPane.showInputDialog(this, "Nombre del equipo:");
+
+            if (nombre == null) {
                 return;
             }
-            String nombre = JOptionPane.showInputDialog(this,"Nombre del equipo: ");
-            int cantidad = Integer.parseInt(JOptionPane.showInputDialog(this,"Cantidad del equipo: "));
-            fachada.agregarEquipoMedico(new EquipoMedico(id,nombre,cantidad));
-        } catch( HeadlessException | IllegalArgumentException ex){
-            mostrarError(ex);
+
+            nombre = nombre.trim();
+
+            if (nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+                break;
+            }
+
+            mostrarMensaje("Nombre inválido. No debe contener números ni estar vacío.");
         }
+
+        int cantidad;
+
+        while (true) {
+            String texto = JOptionPane.showInputDialog(this, "Cantidad del equipo:");
+
+            if (texto == null) {
+                return;
+            }
+
+            try {
+                cantidad = Integer.parseInt(texto.trim());
+
+                if (cantidad > 0) {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+               
+            }
+
+            mostrarMensaje("La cantidad debe ser un número entero mayor que cero.");
+        }
+
+        fachada.agregarEquipoMedico(new EquipoMedico(id, nombre, cantidad));
+
+        mostrarMensaje("Equipo médico agregado correctamente.");
+
+    } catch (HeadlessException | IllegalArgumentException ex) {
+        mostrarError(ex);
     }
+}
     
     private void inventariarEquipoGUI() {
         try {
