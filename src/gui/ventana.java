@@ -515,46 +515,95 @@ System.out.println("Fecha escrita: [" + patron + "]");
     }
 
     private void agendarConsultaGUI() {
-        try {
-            int idConsulta = pedirId("ID de la nueva consulta:");
-            if (idConsulta <= 0) {
-                return;
-            }
-            int idPaciente = pedirId("ID del paciente:");
-            if (idPaciente <= 0) {
-                return;
-            }
-            Paciente p = fachada.obtenerPacientePorId(idPaciente);
-            if (p == null) {
-                mostrarMensaje("No existe un paciente con ID " + idPaciente + ".");
-                return;
-            }
-            mostrarMensaje("Paciente encontrado:\n" + p);
+          try {
+        int idConsulta = pedirId("ID de la nueva consulta:");
+        if (idConsulta <= 0) {
+            return;
+        }
 
-            int idMedico = pedirId("ID del médico:");
-            if (idMedico <= 0) {
-                return;
-            }
-            Medico m = fachada.obtenerMedicoPorId(idMedico);
-            if (m == null) {
-                mostrarMensaje("No existe un médico con ID " + idMedico + ".");
-                return;
-            }
-            mostrarMensaje("Médico encontrado:\n" + m);
+        int idPaciente = pedirId("ID del paciente:");
+        if (idPaciente <= 0) {
+            return;
+        }
 
-            String fecha = JOptionPane.showInputDialog(this, "Fecha y hora (dd/MM/yyyy):");
+        Paciente p = fachada.obtenerPacientePorId(idPaciente);
+
+        if (p == null) {
+            mostrarMensaje("No existe un paciente con ID " + idPaciente + ".");
+            return;
+        }
+
+        mostrarMensaje("Paciente encontrado:\n" + p);
+
+        int idMedico = pedirId("ID del médico:");
+        if (idMedico <= 0) {
+            return;
+        }
+
+        Medico m = fachada.obtenerMedicoPorId(idMedico);
+
+        if (m == null) {
+            mostrarMensaje("No existe un médico con ID " + idMedico + ".");
+            return;
+        }
+
+        mostrarMensaje("Médico encontrado:\n" + m);
+
+        String fecha;
+
+        Pattern patronFecha = Pattern.compile(
+            "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)\\d{2}$"
+        );
+
+        DateTimeFormatter formato =
+            DateTimeFormatter.ofPattern("dd/MM/uuuu");
+
+        while (true) {
+
+            fecha = JOptionPane.showInputDialog(
+                this, "Fecha de la consulta (dd/MM/yyyy):"
+            );
+
             if (fecha == null) {
                 return;
             }
-            if (confirmar("¿Confirma agendar la consulta?")) {
-                Consulta c = new Consulta(idConsulta, p, m, fecha);
-                fachada.programarConsulta(c);
-                mostrarMensaje("Consulta agendada:\n" + c);
+
+            fecha = fecha.trim();
+
+            Matcher matcher = patronFecha.matcher(fecha);
+
+            if (matcher.matches()) {
+
+                try {
+                    LocalDate.parse(fecha, formato);
+                    break;
+
+                } catch (DateTimeParseException e) {
+                    mostrarMensaje(
+                        "La fecha ingresada no es válida para agendar la consulta."
+                    );
+                }
+
+            } else {
+                mostrarMensaje(
+                    "Formato incorrecto. Ingresa la fecha como dd/MM/yyyy."
+                );
             }
-        } catch (HeadlessException ex) {
-            mostrarError(ex);
         }
+
+        if (confirmar("¿Confirma agendar la consulta?")) {
+
+            Consulta c = new Consulta(idConsulta, p, m, fecha);
+
+            fachada.programarConsulta(c);
+
+            mostrarMensaje("Consulta agendada:\n" + c);
+        }
+
+    } catch (HeadlessException | IllegalArgumentException ex) {
+        mostrarError(ex);
     }
+}
 
     private void cancelarConsultaGUI() {
         try {
